@@ -1,5 +1,5 @@
 # minions_jvc
-Using python 3.6
+Using python 3.9
 
 
 To install PyGame 
