@@ -1,20 +1,12 @@
-import pygame
-import random
 import time
+import random
+from variables import*
 
 
-def reset_pos_balls():
-    x_yellow, y_yellow = generate_random_coordinates()
-    x_purple, y_purple = generate_random_coordinates()
-    x_green, y_green = generate_random_coordinates()
-    x_red, y_red = generate_random_coordinates()
-    x_symbol = SPAWN_SYMBOL_X
-    y_symbol = SPAWN_SYMBOL_Y
-    return x_yellow, y_yellow, x_purple, y_purple, x_green, y_green, x_red, y_red, x_symbol, y_symbol
-
-
-def generate_random_coordinates():
-    return random.choice(POS_X), random.choice(POS_Y)
+from functions import is_hovering_quit, is_hovering_quit_game, is_hovering_quit_down, \
+    is_hovering_menu_down, is_hovering_start, is_hovering_level, is_hovering_sounds, \
+    is_hovering_about, is_hovering_reset, is_hovering_score, reset_pos_balls, reading_scores_from_score_data, \
+    is_hovering_time
 
 
 def change_pos(ball_image):
@@ -24,194 +16,185 @@ def change_pos(ball_image):
     return draw_ball, y_for_ball, x_for_ball
 
 
-def is_hovering_quit(mouse):
-    return (620 + 300 > mouse[0] > 620) and (375 + 75 > mouse[1] > 375)
-
-
-def is_hovering_quit_game(mouse):
-    return (911 + 145 > mouse[0] > 912) and (30 + 36 > mouse[1] > 30)
-
-
-def is_hovering_quit_after_game(mouse):
-    return (380 + 300 > mouse[0] > 380) and (638 + 75 > mouse[1] > 638)
-
-
-def is_hovering_menu_after_game(mouse):
-    return (380 + 300 > mouse[0] > 380) and (553 + 75 > mouse[1] > 553)
-
-
-def is_hovering_start(mouse):
-    return (160 + 300 > mouse[0] > 160) and (250 + 75 > mouse[1] > 250)
-
-
-def is_hovering_level(mouse):
-    return (620 + 300 > mouse[0] > 620) and (250 + 75 > mouse[1] > 250)
-
-
-def is_hovering_sounds(mouse):
-    return (160 + 300 > mouse[0] > 160) and (375 + 75 > mouse[1] > 375)
-
-
 pygame.init()
-pygame.mixer.music.set_volume(0.2)
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.load('data/sounds/soundtrack.mp3')
 pygame.mixer.music.play(-1)
 sound_of_collision = pygame.mixer.Sound('data/sounds/sound.wav')
 sound_of_collision.set_volume(0.9)
 sound_of_clicking = pygame.mixer.Sound('data/sounds/click_sound.wav')
 sound_of_clicking.set_volume(0.7)
+volume_adjust = 3
+sound_of_game_on = True
 font_1 = pygame.font.SysFont('arial', 50, True, False)
 font_2 = pygame.font.SysFont('arial', 42, True, False)
 font_3 = pygame.font.SysFont('arial', 70, True, False)
 font_4 = pygame.font.SysFont('arial', 90, True, False)
 pygame.display.set_caption("Minions game")
 screen = pygame.display.set_mode((1080, 720))
-# COLOCAR TODAS AS IMAGENS ABAIXO EM FUNÇÃO USANDO DICIONÁRIO
-image_menu_screen = pygame.image.load('data/screen_images/menu_screen.png')
-image_game_screen = pygame.image.load('data/screen_images/game_screen.png')
-image_after_game_screen = pygame.image.load('data/screen_images/screen_after_game.png')
-image_yellow_minion = pygame.image.load('data/balls/yellow.png')
-image_unicorn = pygame.image.load('data/balls/unicorn.png')
-image_banana = pygame.image.load('data/balls/banana.png')
-image_purple_minion = pygame.image.load('data/balls/purple.png')
-image_green_minion = pygame.image.load('data/balls/green.png')
-image_red_minion = pygame.image.load('data/balls/red.png')
-image_symbol = pygame.image.load('data/balls/black.png')
-image_button_start_white = pygame.image.load('data/buttons/start_white.png')
-image_button_start_black = pygame.image.load('data/buttons/start_black.png')
-image_button_quit_white = pygame.image.load('data/buttons/quit_white.png')
-image_button_quit_black = pygame.image.load('data/buttons/quit_black.png')
-image_button_quit_2_white = pygame.image.load('data/buttons/quit2_white.png')
-image_button_level_easy_white = pygame.image.load('data/buttons/level_easy_white.png')
-image_button_level_easy_black = pygame.image.load('data/buttons/level_easy_black.png')
-image_button_level_normal_white = pygame.image.load('data/buttons/level_normal_white.png')
-image_button_level_normal_black = pygame.image.load('data/buttons/level_normal_black.png')
-image_button_level_hard_white = pygame.image.load('data/buttons/level_hard_white.png')
-image_button_level_hard_black = pygame.image.load('data/buttons/level_hard_black.png')
-image_button_sounds_on_white = pygame.image.load('data/buttons/sounds_on_white.png')
-image_button_sounds_on_black = pygame.image.load('data/buttons/sounds_on_black.png')
-image_button_sounds_off_white = pygame.image.load('data/buttons/sounds_off_white.png')
-image_button_sounds_off_black = pygame.image.load('data/buttons/sounds_off_black.png')
-image_button_menu_white = pygame.image.load('data/buttons/menu_white.png')
-# ###
-volume_adjust = 3
-sound_of_game_on = True
-SPAWN_SYMBOL_X = 540
-SPAWN_SYMBOL_Y = 360
-cord_x_symbol = SPAWN_SYMBOL_X
-cord_y_symbol = SPAWN_SYMBOL_Y
-displacement = 35
-level = 1
-POS_X = [60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270,
-         280, 290, 300, 310, 320, 330, 340, 350, 360, 370, 380, 390, 400, 410, 420, 430, 440, 450, 460, 470, 480, 620,
-         630, 640, 650, 660, 670, 680, 690, 700, 710, 720, 730, 740, 750, 760, 770, 780, 790, 800, 810, 820, 830, 840,
-         850, 860, 870, 880, 890, 900, 910, 920, 930, 940, 950, 960, 970, 980, 990]
-POS_Y = [150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 460, 470, 480, 490, 500, 510, 520, 530, 540,
-         550, 560, 570, 580, 590, 600, 610, 620, 630, 640, 650]
-cord_out_screen = (-200, -200)
-cord_x_yellow_minion, cord_y_yellow_minion = generate_random_coordinates()
-cord_x_purple_minion, cord_y_purple_minion = generate_random_coordinates()
-cord_x_green_minion, cord_y_green_minion = generate_random_coordinates()
-cord_x_red_minion, cord_y_red_minion = generate_random_coordinates()
-cord_y_unicorn = cord_x_unicorn = cord_y_banana = cord_x_banana = -200
-break_unicorn_to_appear = 2
-break_banana_to_appear = 4
-collision_counter = 0
 entire_game_on = True
-
+show_tutorial = True
 while entire_game_on:
     screen_menu_on = True
+    screen_tutorial_on = True
     screen_game_on = True
     screen_after_game_on = True
+    screen_score_on = False
+    screen_about_on = False
+
     while screen_menu_on:
         pygame.time.delay(50)
         screen.blit(image_menu_screen, (0, 0))
-        screen.blit(image_button_start_black, (160, 250))
-        screen.blit(image_button_quit_black, (620, 375))
         score_counter = banana_counter = unicorn_counter = bad_minions_counter = good_minion_counter = 0
-        help_easy_level = True
-        if level == 1:
-            screen.blit(image_button_level_normal_black, (620, 250))
-        elif level == 0:
-            screen.blit(image_button_level_easy_black, (620, 250))
-        elif level == 2:
-            screen.blit(image_button_level_hard_black, (620, 250))
+        screen.blit(image_button_sounds_on_black, (204, 331))
+        mouse = pygame.mouse.get_pos()
+        print(mouse)
 
-        screen.blit(image_button_sounds_on_black, (160, 375))
+        if level == 'normal':
+            screen.blit(image_button_level_normal_black, (539, 212))
+        elif level == 'easy':
+            screen.blit(image_button_level_easy_black, (539, 212))
+        elif level == 'hard':
+            screen.blit(image_button_level_hard_black, (539, 212))
+
         if sound_of_game_on:
-            screen.blit(image_button_sounds_on_black, (160, 375))
+            screen.blit(image_button_sounds_on_black, (204, 331))
         else:
-            screen.blit(image_button_sounds_off_black, (160, 375))
+            screen.blit(image_button_sounds_off_black, (204, 331))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = False
             keys = pygame.key.get_pressed()
 
-        mouse = pygame.mouse.get_pos()
-
         if is_hovering_start(mouse):
-            screen.blit(image_button_start_white, (160, 250))
+            screen.blit(image_button_start_white, (204, 212))
             if pygame.mouse.get_pressed() == (1, 0, 0):
                 sound_of_clicking.play()
                 screen_menu_on = False
                 score_counter = timer = 0
-                start = 0
-                start = time.time()
-
+                if not show_tutorial:
+                    start = 0
+                    start = time.time()
+                else:
+                    start_time_tutorial = time.time()
+                pygame.time.delay(100)
         if is_hovering_level(mouse):
-            if level == 1:
-                screen.blit(image_button_level_normal_white, (620, 250))
-            elif level == 0:
-                screen.blit(image_button_level_easy_white, (620, 250))
-            elif level == 2:
-                screen.blit(image_button_level_hard_white, (620, 250))
+            if level == 'normal':
+                screen.blit(image_button_level_normal_white, (539, 212))
+            elif level == 'easy':
+                screen.blit(image_button_level_easy_white, (539, 212))
+            elif level == 'hard':
+                screen.blit(image_button_level_hard_white, (539, 212))
             if pygame.mouse.get_pressed() == (1, 0, 0):
                 sound_of_clicking.play()
-                if level == 1:
-                    level = 2
+                if level == 'normal':
+                    level = 'hard'
                     pygame.time.delay(150)
-                elif level == 2:
-                    level = 0
+                elif level == 'hard':
+                    level = 'easy'
                     pygame.time.delay(150)
-                elif level == 0:
-                    level = 1
+                elif level == 'easy':
+                    level = 'normal'
                     pygame.time.delay(150)
 
         if is_hovering_sounds(mouse):
             if sound_of_game_on:
-                screen.blit(image_button_sounds_on_white, (160, 375))
+                screen.blit(image_button_sounds_on_white, (204, 331))
             else:
-                screen.blit(image_button_sounds_off_white, (160, 375))
+                screen.blit(image_button_sounds_off_white, (204, 331))
             if pygame.mouse.get_pressed() == (1, 0, 0):
-                sound_of_clicking.play()
                 if volume_adjust % 2 == 0:
-                    pygame.mixer.music.set_volume(0.2)
+                    pygame.mixer.music.set_volume(0.1)
                     sound_of_collision.set_volume(0.9)
                     sound_of_clicking.set_volume(0.7)
                     volume_adjust += 1
-                    pygame.time.delay(150)
+                    pygame.time.delay(200)
                     sound_of_game_on = True
                     sound_of_clicking.play()
                 else:
-                    sound_of_clicking.play()
                     sound_of_game_on = False
                     pygame.mixer.music.set_volume(0)
                     sound_of_collision.set_volume(0)
                     sound_of_clicking.set_volume(0)
                     volume_adjust += 1
-                    pygame.time.delay(150)
+                    pygame.time.delay(200)
 
         if is_hovering_quit(mouse):
-            screen.blit(image_button_quit_white, (620, 375))
+            screen.blit(image_button_quit_white, (379, 569))
             if pygame.mouse.get_pressed() == (1, 0, 0):
                 sound_of_clicking.play()
                 screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = False
 
+        if is_hovering_time(mouse):
+            screen.blit(image_button_time_white, (539, 331))
+            time_choice_to_print = f'{time_choice}s'
+            time_choice_format = font_3.render(time_choice_to_print, True, (255, 255, 255))
+            screen.blit(time_choice_format, (641, 330))
+
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                pygame.time.delay(200)
+                if time_choice == 60:
+                    time_choice = 30
+                elif time_choice == 30:
+                    time_choice = 60
+
+        if is_hovering_score(mouse):
+            screen.blit(image_button_score_white, (539, 450))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_menu_on = screen_game_on = screen_after_game_on = False
+                screen_score_on = True
+                pygame.time.delay(40)
+
+        if is_hovering_about(mouse):
+            screen.blit(image_button_about_white, (204, 450))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_menu_on = screen_game_on = screen_after_game_on = screen_score_on = False
+                screen_about_on = True
+                pygame.time.delay(40)
+
         pygame.display.update()
+        checking_highest_score = True
+
+    while screen_tutorial_on:
+        screen.blit(image_tutorial_screen, (0, 0))
+        pygame.time.delay(50)
+        mouse = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = \
+                    screen_score_on = screen_about_on = screen_tutorial_on = False
+            keys = pygame.key.get_pressed()
+
+        if is_hovering_quit_game(mouse):
+            screen.blit(image_button_quit_2_white, (911, 30))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_tutorial_on = False
+                show_tutorial = False
+                start = 0
+                start = time.time()
+        end_time_tutorial = time.time()
+        timer_tutorial = (end_time_tutorial - start_time_tutorial)
+        timer_tutorial_to_print = f'{(10 - timer_tutorial):.0f}s'
+        timer_tutorial_format = font_4.render(timer_tutorial_to_print, True, (255, 0, 0))
+        screen.blit(timer_tutorial_format, (675, 600))
+        if timer_tutorial >= 9.5:
+            screen_tutorial_on = False
+            show_tutorial = False
+            start = 0
+            start = time.time()
+        print(mouse)
+        pygame.display.flip()
+
     while screen_game_on:
         screen.blit(image_game_screen, (0, 0))
         pygame.time.delay(40)
+        print(collision_counter)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -233,34 +216,39 @@ while entire_game_on:
         if keys[pygame.K_LEFT] and cord_x_symbol >= 30:
             cord_x_symbol -= displacement
 
-        if level == 0:
-            break_banana_to_appear = 10
-            break_unicorn_to_appear = 10
-            obj_green_minion = screen.blit(image_green_minion, cord_out_screen)
-            obj_red_minion = screen.blit(image_red_minion, cord_out_screen)
-            obj_purple_minion = screen.blit(image_purple_minion, cord_out_screen)
-
-            if help_easy_level:
-                obj_unicorn, cord_y_unicorn, cord_x_unicorn = change_pos(image_unicorn)
-                obj_banana, cord_y_banana, cord_x_banana = change_pos(image_banana)
-                help_easy_level = False
-
-        elif level == 1:
-            obj_green_minion = screen.blit(image_green_minion, cord_out_screen)
-            obj_red_minion = screen.blit(image_red_minion, cord_out_screen)
-            obj_purple_minion = screen.blit(image_purple_minion, (cord_x_purple_minion, cord_y_purple_minion))
+        if level == 'easy':
             obj_unicorn = screen.blit(image_unicorn, (cord_x_unicorn, cord_y_unicorn))
             obj_banana = screen.blit(image_banana, (cord_x_banana, cord_y_banana))
-        elif level == 2:
+            obj_purple_minion = screen.blit(image_purple_minion, (cord_x_purple_minion, cord_y_purple_minion))
+            obj_green_minion = screen.blit(image_green_minion, cord_out_screen)
+            obj_red_minion = screen.blit(image_red_minion, cord_out_screen)
+
+        elif level == 'normal':
+            obj_purple_minion = screen.blit(image_purple_minion, (cord_x_purple_minion, cord_y_purple_minion))
+            if collision_counter != 0 and (collision_counter % 3 == 0):
+                obj_unicorn = screen.blit(image_unicorn, (cord_x_unicorn, cord_y_unicorn))
+            else:
+                obj_unicorn = screen.blit(image_unicorn, cord_out_screen)
+            if collision_counter != 0 and (collision_counter % 6 == 0):
+                obj_banana = screen.blit(image_banana, (cord_x_banana, cord_y_banana))
+            else:
+                obj_banana = screen.blit(image_banana, cord_out_screen)
+            obj_green_minion = screen.blit(image_green_minion, cord_out_screen)
+            obj_red_minion = screen.blit(image_red_minion, cord_out_screen)
+
+        elif level == 'hard':
             obj_green_minion = screen.blit(image_green_minion, (cord_x_green_minion, cord_y_green_minion))
             obj_red_minion = screen.blit(image_red_minion, (cord_x_red_minion, cord_y_red_minion))
             obj_purple_minion = screen.blit(image_purple_minion, (cord_x_purple_minion, cord_y_purple_minion))
-            # PROBLEMA COM SPAWN obj_banana e obj_unicorn NO LEVE HARD
-            # obj_unicorn = screen.blit(image_unicorn, cord_out_screen)
-            # obj_banana = screen.blit(image_banana, cord_out_screen)
-            break_banana_to_appear = 8
-            break_unicorn_to_appear = 4
 
+            if collision_counter != 0 and (collision_counter % 5 == 0):
+                obj_unicorn = screen.blit(image_unicorn, (cord_x_unicorn, cord_y_unicorn))
+            else:
+                obj_unicorn = screen.blit(image_unicorn, cord_out_screen)
+            if collision_counter != 0 and (collision_counter % 10== 0):
+                obj_banana = screen.blit(image_banana, (cord_x_banana, cord_y_banana))
+            else:
+                obj_banana = screen.blit(image_banana, cord_out_screen)
         obj_yellow_minion = screen.blit(image_yellow_minion, (cord_x_yellow_minion, cord_y_yellow_minion))
         obj_symbol = screen.blit(image_symbol, (cord_x_symbol, cord_y_symbol))
 
@@ -293,97 +281,88 @@ while entire_game_on:
                 collision_counter += 1
                 good_minion_counter += 1
                 score_counter += 5
-                cord_x_yellow_minion, cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, \
-                    cord_x_green_minion, cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, \
-                    cord_y_symbol = reset_pos_balls()
+                cord_x_unicorn, cord_y_unicorn, cord_x_banana, cord_y_banana, cord_x_yellow_minion, \
+                    cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion,\
+                    cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = \
+                    reset_pos_balls()
                 sound_of_collision.play()
-                if break_unicorn_to_appear and break_banana_to_appear == 10:
-                    cord_x_unicorn, cord_y_unicorn = generate_random_coordinates()
-                    cord_x_banana, cord_y_banana = generate_random_coordinates()
-                else:
-                    if collision_counter % break_unicorn_to_appear == 0:
-                        cord_x_unicorn, cord_y_unicorn = generate_random_coordinates()
-                        if collision_counter % break_banana_to_appear == 0:
-                            cord_x_banana, cord_y_banana = generate_random_coordinates()
-                    else:
-                        cord_x_unicorn = cord_y_unicorn = cord_y_banana = cord_x_banana = -200
-
+                pygame.time.delay(50)
             if obj_symbol.colliderect(obj_unicorn):
                 collision_counter += 1
                 score_counter += 10
                 unicorn_counter += 1
-                cord_x_unicorn = cord_y_unicorn = cord_x_banana = cord_y_banana = -200
-                cord_x_yellow_minion, cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, \
-                    cord_x_green_minion, cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, \
-                    cord_y_symbol = reset_pos_balls()
+                cord_x_unicorn, cord_y_unicorn, cord_x_banana, cord_y_banana, cord_x_yellow_minion, \
+                    cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion, \
+                    cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = \
+                    reset_pos_balls()
                 sound_of_collision.play()
-                if break_unicorn_to_appear and break_banana_to_appear == 10:
-                    cord_x_unicorn, cord_y_unicorn = generate_random_coordinates()
-                    cord_x_banana, cord_y_banana = generate_random_coordinates()
-
+                pygame.time.delay(50)
             if obj_symbol.colliderect(obj_banana):
                 collision_counter += 1
                 score_counter += 20
                 banana_counter += 1
-                cord_y_unicorn = cord_x_unicorn = cord_y_banana = cord_x_banana = -200
-                cord_x_yellow_minion, cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, \
-                    cord_x_green_minion, cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, \
-                    cord_y_symbol = reset_pos_balls()
-
-                if break_unicorn_to_appear and break_banana_to_appear == 10:
-                    cord_x_unicorn, cord_y_unicorn = generate_random_coordinates()
-                    cord_x_banana, cord_y_banana = generate_random_coordinates()
-
+                cord_x_unicorn, cord_y_unicorn, cord_x_banana, cord_y_banana, cord_x_yellow_minion, \
+                    cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion, \
+                    cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = \
+                    reset_pos_balls()
                 sound_of_clicking.play()
                 sound_of_collision.play()
-
+                pygame.time.delay(50)
             if obj_symbol.colliderect(obj_purple_minion):
                 score_counter -= 10
                 bad_minions_counter += 1
                 if score_counter < 0:
                     score_counter = 0
-                cord_x_yellow_minion, cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, \
-                    cord_x_green_minion, cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, \
-                    cord_y_symbol = reset_pos_balls()
-                cord_y_unicorn = cord_x_unicorn = cord_y_banana = cord_x_banana = -200
+                cord_x_unicorn, cord_y_unicorn, cord_x_banana, cord_y_banana, cord_x_yellow_minion, \
+                    cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion, \
+                    cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = \
+                    reset_pos_balls()
                 sound_of_collision.play()
-
+                pygame.time.delay(50)
             if obj_symbol.colliderect(obj_green_minion):
                 bad_minions_counter += 1
                 score_counter -= 10
                 if score_counter < 0:
                     score_counter = 0
-                cord_x_yellow_minion, cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, \
-                    cord_x_green_minion, cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, \
-                    cord_x_symbol, cord_y_symbol = reset_pos_balls()
-                cord_y_unicorn = cord_x_unicorn = cord_y_banana = cord_x_banana = -200
-                sound_of_collision.play()
+                cord_x_unicorn, cord_y_unicorn, cord_x_banana, cord_y_banana, cord_x_yellow_minion, \
+                    cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion, \
+                    cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = \
+                    reset_pos_balls()
 
+                sound_of_collision.play()
+                pygame.time.delay(50)
             if obj_symbol.colliderect(obj_red_minion):
-                bad_minions_counter += 1
+                collision_counter += 1
                 score_counter -= 10
                 if score_counter < 0:
                     score_counter = 0
-                    cord_x_yellow_minion, cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion, \
-                        cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = reset_pos_balls()
-                cord_y_unicorn = cord_x_unicorn = cord_y_banana = cord_x_banana = -200  # reseta bolas verdes e azuis
+                cord_x_unicorn, cord_y_unicorn, cord_x_banana, cord_y_banana, cord_x_yellow_minion, \
+                    cord_y_yellow_minion, cord_x_purple_minion, cord_y_purple_minion, cord_x_green_minion, \
+                    cord_y_green_minion, cord_x_red_minion, cord_y_red_minion, cord_x_symbol, cord_y_symbol = \
+                    reset_pos_balls()
                 sound_of_collision.play()
+                pygame.time.delay(50)
 
         end = time.time()
         timer = (end - start)
-        timer_to_print = f'{timer:.0f}s'
+        print(timer)
+        timer_to_print = f'{(time_choice - timer):.0f}s'
         score_to_print = f'{score_counter}'
         timer_format = font_3.render(timer_to_print, True, (0, 0, 0))
         score_format = font_3.render(score_to_print, True, (0, 0, 0))
         screen.blit(timer_format, (680, 10))
         screen.blit(score_format, (260, 10))
         pygame.display.flip()
-        if timer > 30:
+        flag_for_append_score = True
+        if timer > time_choice:
             screen_game_on = False
 
     while screen_after_game_on:
         screen.blit(image_after_game_screen, (0, 0))
         pygame.time.delay(50)
+        if flag_for_append_score:
+            score_list.append(int(score_counter))
+            flag_for_append_score = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -391,14 +370,15 @@ while entire_game_on:
             keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pos()
 
-        if is_hovering_menu_after_game(mouse):
+        if is_hovering_menu_down(mouse):
             screen.blit(image_button_menu_white, (380, 553))
             if pygame.mouse.get_pressed() == (1, 0, 0):
                 sound_of_clicking.play()
+                pygame.time.delay(100)
                 screen_menu_on = True
-                screen_game_on = screen_after_game_on = False
+                screen_game_on = screen_after_game_on = screen_score_on = screen_about_on = False
 
-        if is_hovering_quit_after_game(mouse):
+        if is_hovering_quit_down(mouse):
             screen.blit(image_button_quit_white, (380, 638))
             if pygame.mouse.get_pressed() == (1, 0, 0):
                 sound_of_clicking.play()
@@ -421,6 +401,94 @@ while entire_game_on:
         screen.blit(bad_minions_format, (730, 250))
         screen.blit(score_format, (625, 345))
         pygame.display.flip()
+        checking_highest_score = True
 
+    while screen_score_on:
+        screen.blit(image_score_screen, (0, 0))
+        pygame.time.delay(50)
+        mouse = pygame.mouse.get_pos()
+
+        if checking_highest_score:
+            highest_score_from_list = max(score_list)
+            highest_score_from_score_data = reading_scores_from_score_data()
+            if highest_score_from_score_data > highest_score_from_list:
+                the_highest_score = highest_score_from_score_data
+                checking_highest_score = False
+            else:
+                the_highest_score = highest_score_from_list
+                checking_highest_score = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = screen_score_on = False
+            keys = pygame.key.get_pressed()
+
+        if is_hovering_menu_down(mouse):
+            screen.blit(image_button_menu_white, (380, 553))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_menu_on = True
+                screen_game_on = screen_after_game_on = screen_score_on = screen_about_on = False
+
+        if is_hovering_quit_down(mouse):
+            screen.blit(image_button_quit_white, (380, 638))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = screen_score_on = False
+
+        if is_hovering_reset(mouse):
+            screen.blit(image_button_reset_white, (380, 468))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                pygame.time.delay(50)
+                the_highest_score = 0
+                with open('score_data.txt', 'w') as score_to_write:
+                    for score in score_list:
+                        score_to_write.write(str(score) + '\n')
+
+        highest_score_to_print = f'{the_highest_score}'
+        highest_score_format = font_4.render(highest_score_to_print, True, (255, 255, 255))
+        screen.blit(highest_score_format, (470, 310))
+        print(mouse)
+        pygame.display.flip()
+
+    while screen_about_on:
+        screen.blit(image_about_screen, (0, 0))
+        pygame.time.delay(50)
+        mouse = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = \
+                    screen_score_on = screen_about_on = False
+            keys = pygame.key.get_pressed()
+
+        if is_hovering_menu_down(mouse):
+            screen.blit(image_button_menu_white, (380, 553))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_menu_on = True
+                screen_game_on = screen_after_game_on = screen_score_on = screen_about_on = False
+                pygame.time.delay(50)
+        if is_hovering_quit_down(mouse):
+            screen.blit(image_button_quit_white, (380, 638))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                sound_of_clicking.play()
+                screen_about_on, screen_menu_on, screen_game_on, screen_after_game_on, entire_game_on, screen_score_on = False
+                pygame.time.delay(50)
+        pygame.display.flip()
+
+with open('score_data.txt', 'a') as score_to_write:
+    for score in score_list:
+        if score != 0:
+            score_to_write.write(str(score) + '\n')
 pygame.quit()
 
+# while screen_about_on:
+#     screen.blit(IMAGEM, (0, 0))
+#     pygame.time.delay(50)
+#     mouse = pygame.mouse.get_pos()
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             screen_menu_on = screen_game_on = screen_after_game_on = entire_game_on = \
+#                 screen_score_on = screen_about_on = False
+#         keys = pygame.key.get_pressed()
+#     pygame.display.flip()
