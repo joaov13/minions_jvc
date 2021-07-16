@@ -16,7 +16,7 @@ def change_pos(ball_image):
 
 
 pygame.init()
-pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.set_volume(0)
 pygame.mixer.music.load('data/sounds/soundtrack.mp3')
 pygame.mixer.music.play(-1)
 sound_of_collision = pygame.mixer.Sound('data/sounds/sound.wav')
@@ -177,6 +177,7 @@ while entire_game_on:
                 show_tutorial = False
                 start = 0
                 start = time.time()
+                pygame.time.delay(50)
         end_time_tutorial = time.time()
         timer_tutorial = (end_time_tutorial - start_time_tutorial)
         timer_tutorial_to_print = f'{(10 - timer_tutorial):.0f}s'
@@ -253,25 +254,25 @@ while entire_game_on:
         test_collision_spawn = True
         if test_collision_spawn:
             if obj_purple_minion.colliderect(obj_yellow_minion):
-                obj_purple_minion, cord_y_purple_minion, cord_x_purple_minion = change_pos(image_purple_minion)
+                obj_purple_minion, cord_x_purple_minion, cord_y_purple_minion = change_pos(image_purple_minion)
 
             if obj_green_minion.colliderect(obj_yellow_minion) or obj_green_minion.colliderect(obj_red_minion):
-                obj_green_minion, cord_y_green_minion, cord_x_green_minion = change_pos(image_green_minion)
+                obj_green_minion, cord_x_green_minion, cord_y_green_minion = change_pos(image_green_minion)
 
             if obj_red_minion.colliderect(obj_yellow_minion):
-                obj_red_minion, cord_y_red_minion, cord_x_red_minion = change_pos(image_red_minion)
+                obj_red_minion, cord_x_red_minion, cord_y_red_minion = change_pos(image_red_minion)
 
             if obj_purple_minion.colliderect(obj_unicorn) or obj_purple_minion.colliderect(obj_banana) or \
                     obj_purple_minion.colliderect(obj_red_minion) or obj_purple_minion.colliderect(obj_green_minion):
-                obj_purple_minion, cord_y_purple_minion, cord_x_purple_minion = change_pos(image_purple_minion)
+                obj_purple_minion, cord_x_purple_minion, cord_y_purple_minion = change_pos(image_purple_minion)
 
             if obj_unicorn.colliderect(obj_banana) or obj_unicorn.colliderect(obj_yellow_minion) or \
                     obj_unicorn.colliderect(obj_red_minion) or obj_unicorn.colliderect(obj_green_minion):
-                obj_unicorn, cord_y_unicorn, cord_x_unicorn = change_pos(image_unicorn)
+                obj_unicorn, cord_x_unicorn, cord_y_unicorn = change_pos(image_unicorn)
 
             if obj_banana.colliderect(obj_yellow_minion) or obj_banana.colliderect(
                     obj_green_minion) or obj_banana.colliderect(obj_red_minion):
-                obj_banana, cord_y_banana, cord_x_banana = change_pos(image_banana)
+                obj_banana, cord_x_banana, cord_y_banana = change_pos(image_banana)
 
         test_collision_red = True
         if test_collision_red:
