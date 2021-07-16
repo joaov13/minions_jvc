@@ -10,8 +10,7 @@ from functions import is_hovering_quit, is_hovering_quit_game, is_hovering_quit_
 
 
 def change_pos(ball_image):
-    y_for_ball = (random.choice(POS_Y))
-    x_for_ball = (random.choice(POS_X))
+    y_for_ball, x_for_ball = generate_random_coordinates()
     draw_ball = screen.blit(ball_image, (x_for_ball, y_for_ball))
     return draw_ball, y_for_ball, x_for_ball
 
@@ -194,7 +193,6 @@ while entire_game_on:
     while screen_game_on:
         screen.blit(image_game_screen, (0, 0))
         pygame.time.delay(40)
-        print(collision_counter)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -342,10 +340,9 @@ while entire_game_on:
                     reset_pos_balls()
                 sound_of_collision.play()
                 pygame.time.delay(50)
-
+        print(mouse)
         end = time.time()
         timer = (end - start)
-        print(timer)
         timer_to_print = f'{(time_choice - timer):.0f}s'
         score_to_print = f'{score_counter}'
         timer_format = font_3.render(timer_to_print, True, (0, 0, 0))
