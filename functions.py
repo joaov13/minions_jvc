@@ -1,20 +1,12 @@
 import random
 
 
-SPAWN_SYMBOL_X = 540
-SPAWN_SYMBOL_Y = 360
-
-
 def is_hovering_quit(mouse):
     return (379 + 300 > mouse[0] > 379) and (569 + 75 > mouse[1] > 569)
 
 
 def is_hovering_quit_game(mouse):
     return (911 + 145 > mouse[0] > 912) and (30 + 36 > mouse[1] > 30)
-
-
-def is_hovering_quit_down(mouse):
-    return (380 + 300 > mouse[0] > 380) and (638 + 75 > mouse[1] > 638)
 
 
 def is_hovering_reset(mouse):
@@ -64,17 +56,32 @@ def generate_random_coordinates():
     return pos_x, pos_y
 
 
-def reset_pos_balls():
-    x_uni, y_uni = generate_random_coordinates()
-    x_banana, y_banana = generate_random_coordinates()
-    x_yellow, y_yellow = generate_random_coordinates()
-    x_purple, y_purple = generate_random_coordinates()
-    x_green, y_green = generate_random_coordinates()
-    x_red, y_red = generate_random_coordinates()
-    x_symbol = SPAWN_SYMBOL_X
-    y_symbol = SPAWN_SYMBOL_Y
-    return x_uni, y_uni, x_banana, y_banana, x_yellow, y_yellow, x_purple, y_purple, x_green, y_green, x_red, y_red, \
-        x_symbol, y_symbol
+def generate_just_coordinate_x():
+    pos_x = (random.randint(10, 98))
+    while 48 < pos_x < 62:
+        pos_x = (random.randint(10, 98))
+    return pos_x * 10
+
+
+def generate_just_coordinate_y():
+    pos_y = (random.randint(17, 60))
+    while 27 < pos_y < 46:
+        pos_y = (random.randint(17, 60))
+    return pos_y * 10
+
+
+def generate_list_of_coordinates():
+    list_x = []
+    for x in range(20):
+        cord = generate_just_coordinate_x()
+        if cord not in list_x:
+            list_x.append(cord)
+    list_y = []
+    for x in range(20):
+        cord = generate_just_coordinate_y()
+        if cord not in list_y:
+            list_y.append(cord)
+    return list_x[0], list_x[1], list_x[2], list_x[3], list_x[4], list_x[5], list_y[0], list_y[1], list_y[2], list_y[3], list_y[4], list_y[5]
 
 
 def reading_scores_from_score_data():
@@ -88,3 +95,5 @@ def reading_scores_from_score_data():
         if (highest_score == 0) or (scores > highest_score):
             highest_score = scores
     return highest_score
+
+

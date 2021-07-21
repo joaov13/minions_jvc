@@ -1,7 +1,4 @@
 import pygame
-
-from functions import generate_random_coordinates
-
 image_menu_screen = pygame.image.load('data/screen_images/menu_screen.png')
 image_game_screen = pygame.image.load('data/screen_images/game_screen.png')
 image_after_game_screen = pygame.image.load('data/screen_images/screen_after_game.png')
@@ -36,23 +33,3 @@ image_button_time_white = pygame.image.load('data/buttons/time_white.png')
 image_arrows = pygame.image.load('data/buttons/arrows.png')
 
 
-SPAWN_SYMBOL_X = 540
-SPAWN_SYMBOL_Y = 360
-cord_x_symbol = SPAWN_SYMBOL_X
-cord_y_symbol = SPAWN_SYMBOL_Y
-displacement = 30
-level = 'normal'
-
-cord_out_screen = (-200, -200)
-
-cord_x_yellow_minion, cord_y_yellow_minion = generate_random_coordinates()
-cord_x_purple_minion, cord_y_purple_minion = generate_random_coordinates()
-cord_x_green_minion, cord_y_green_minion = generate_random_coordinates()
-cord_x_red_minion, cord_y_red_minion = generate_random_coordinates()
-cord_y_unicorn = cord_x_unicorn = cord_y_banana = cord_x_banana = generate_random_coordinates()
-
-collision_counter = 0
-score_list = [0]
-the_highest_score = 0
-time_choice = 30
-start_time_tutorial = 0
