@@ -1,4 +1,4 @@
-import pygame
+from main import pygame
 image_menu_screen = pygame.image.load('data/screen_images/menu_screen.png')
 image_game_screen = pygame.image.load('data/screen_images/game_screen.png')
 image_after_game_screen = pygame.image.load('data/screen_images/screen_after_game.png')
@@ -31,5 +31,36 @@ image_button_about_white = pygame.image.load('data/buttons/about_white.png')
 image_button_reset_white = pygame.image.load('data/buttons/reset_white.png')
 image_button_time_white = pygame.image.load('data/buttons/time_white.png')
 image_arrows = pygame.image.load('data/buttons/arrows.png')
+#
+image_choose_game_mode_screen = pygame.image.load('data/new_data/new_screens/choose_game_mode_screen.png')
+image_choose_settings_screen = pygame.image.load('data/new_data/new_screens/choose_settings_screen.png')
+image_first_screen = pygame.image.load('data/new_data/new_screens/first_screen.png')
+image_new_score_screen = pygame.image.load('data/new_data/new_screens/score_screen.png')
 
+image_button_play_white = pygame.image.load('data/new_data/new_buttons/button_play_white_white.png')
+image_button_new_menu_white = pygame.image.load('data/new_data/new_buttons/button_menu_white.png')
+image_button_new_score_white = pygame.image.load('data/new_data/new_buttons/button_score_white.png')
+image_button_new_reset_white = pygame.image.load('data/new_data/new_buttons/button_reset_white.png')
+image_button_new_quit_white = pygame.image.load('data/new_data/new_buttons/button_quit_white.png')
 
+image_button_modern_white = pygame.image.load('data/new_data/new_buttons/button_modern_white.png')
+image_button_classic_white = pygame.image.load('data/new_data/new_buttons/button_classic_white.png')
+image_button_dodge_white = pygame.image.load('data/new_data/new_buttons/button_dodge_white.png')
+image_modern_info = pygame.image.load('data/new_data/new_buttons/big_info.png')
+image_classic_info = pygame.image.load('data/new_data/new_buttons/classic_info.png')
+image_dodge_info = pygame.image.load('data/new_data/new_buttons/dodge_info.png')
+
+image_agnes_white = pygame.image.load('data/new_data/objects/agnes_white.png')
+image_margo_white = pygame.image.load('data/new_data/objects/margo_white.png')
+image_judith_white = pygame.image.load('data/new_data/objects/judith_white.png')
+image_agnes_obj = pygame.image.load('data/new_data/objects/agnes.png')
+image_margo_obj = pygame.image.load('data/new_data/objects/margo.png')
+image_judith_obj = pygame.image.load('data/new_data/objects/judith.png')
+
+image_choosing_arrow = pygame.image.load('data/new_data/new_buttons/arrow.png')
+image_button_30s = pygame.image.load('data/new_data/new_buttons/30_white.png')
+image_button_45s = pygame.image.load('data/new_data/new_buttons/45_white.png')
+image_button_60s = pygame.image.load('data/new_data/new_buttons/60_white.png')
+image_button_hard_white = pygame.image.load('data/new_data/new_buttons/hard_white.png')
+image_button_normal_white = pygame.image.load('data/new_data/new_buttons/normal_white.png')
+image_button_easy_white = pygame.image.load('data/new_data/new_buttons/easy_white.png')
