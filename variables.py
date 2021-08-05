@@ -36,12 +36,19 @@ image_choose_game_mode_screen = pygame.image.load('data/new_data/new_screens/cho
 image_choose_settings_screen = pygame.image.load('data/new_data/new_screens/choose_settings_screen.png')
 image_first_screen = pygame.image.load('data/new_data/new_screens/first_screen.png')
 image_new_score_screen = pygame.image.load('data/new_data/new_screens/score_screen.png')
+image_new_about_screen = pygame.image.load('data/new_data/new_screens/about_screen.png')
 
 image_button_play_white = pygame.image.load('data/new_data/new_buttons/button_play_white_white.png')
 image_button_new_menu_white = pygame.image.load('data/new_data/new_buttons/button_menu_white.png')
 image_button_new_score_white = pygame.image.load('data/new_data/new_buttons/button_score_white.png')
+image_button_new_about_white = pygame.image.load('data/new_data/new_buttons/button_about_white.png')
 image_button_new_reset_white = pygame.image.load('data/new_data/new_buttons/button_reset_white.png')
 image_button_new_quit_white = pygame.image.load('data/new_data/new_buttons/button_quit_white.png')
+image_button_new_sound_on_white = pygame.image.load('data/new_data/new_buttons/button_sound_on_white.png')
+image_button_new_sound_on_black = pygame.image.load('data/new_data/new_buttons/sound_on_black.png')
+image_button_new_sound_off_white = pygame.image.load('data/new_data/new_buttons/button_sound_off_white.png')
+image_button_new_sound_off_black = pygame.image.load('data/new_data/new_buttons/sound_off_black.png')
+
 
 image_button_modern_white = pygame.image.load('data/new_data/new_buttons/button_modern_white.png')
 image_button_classic_white = pygame.image.load('data/new_data/new_buttons/button_classic_white.png')
