@@ -1,5 +1,5 @@
 import random
-from variables import *
+from images import *
 from main import pygame
 
 
@@ -62,14 +62,20 @@ def generate_list_of_coordinates():
 
 
 def change_all_objects_coordinates(current_coordinates):
+    current_coordinates.cord_x_2x = generate_just_coordinate_x()
+    current_coordinates.cord_y_2x = generate_just_coordinate_y()
+    current_coordinates.cord_x_potion = generate_just_coordinate_x()
+    current_coordinates.cord_y_potion = generate_just_coordinate_y()
+    current_coordinates.cord_x_clock = generate_just_coordinate_x()
+    current_coordinates.cord_y_clock = generate_just_coordinate_y()
     current_coordinates.cord_x_symbol = current_coordinates.SPAWN_SYMBOL_X
     current_coordinates.cord_y_symbol = current_coordinates.SPAWN_SYMBOL_Y
     current_coordinates.cord_x_yellow_minion, current_coordinates.cord_x_purple_minion, \
-    current_coordinates.cord_x_green_minion, current_coordinates.cord_x_red_minion, \
-    current_coordinates.cord_x_unicorn, current_coordinates.cord_x_banana, \
-    current_coordinates.cord_y_yellow_minion, current_coordinates.cord_y_purple_minion, \
-    current_coordinates.cord_y_green_minion, current_coordinates.cord_y_red_minion, \
-    current_coordinates.cord_y_unicorn, current_coordinates.cord_y_banana \
+        current_coordinates.cord_x_green_minion, current_coordinates.cord_x_red_minion, \
+        current_coordinates.cord_x_unicorn, current_coordinates.cord_x_banana, \
+        current_coordinates.cord_y_yellow_minion, current_coordinates.cord_y_purple_minion, \
+        current_coordinates.cord_y_green_minion, current_coordinates.cord_y_red_minion, \
+        current_coordinates.cord_y_unicorn, current_coordinates.cord_y_banana \
         = generate_list_of_coordinates()
 
 
@@ -117,6 +123,24 @@ def move_minions_in_dodge_mode(info_game):
         info_game.current_coordinates.cord_y_green_minion -= info_game.current_coordinates.green_minion_displacement
         if info_game.current_coordinates.cord_y_green_minion <= 96:
             info_game.current_coordinates.where_move_green_minion = 'down'
+
+
+def set_bad_minions_on_corners(info_game):
+    coordinates = [[0, 98], [1000, 98], [0, 640]]
+    if info_game.current_settings.level_choice == 'easy':
+        info_game.current_coordinates.cord_x_purple_minion = coordinates[1][0]
+        info_game.current_coordinates.cord_y_purple_minion = coordinates[1][1]
+    elif info_game.current_settings.level_choice == 'normal':
+        info_game.current_coordinates.cord_x_purple_minion = coordinates[1][0]
+        info_game.current_coordinates.cord_y_purple_minion = coordinates[1][1]
+    elif info_game.current_settings.level_choice == 'hard':
+        info_game.current_coordinates.cord_x_purple_minion = coordinates[1][0]
+        info_game.current_coordinates.cord_y_purple_minion = coordinates[1][1]
+        info_game.current_coordinates.cord_x_green_minion = coordinates[0][0]
+        info_game.current_coordinates.cord_y_green_minion = coordinates[0][1]
+        info_game.current_coordinates.cord_x_red_minion = coordinates[2][0]
+        info_game.current_coordinates.cord_y_red_minion = coordinates[2][1]
+
 class Settings:
     level_choice = 'normal'
     character_choice = 'agnes'
@@ -126,9 +150,12 @@ class Settings:
     timer_classic = 0
     start_timer_classic = 0
     end_timer_classic = 0
+    timer = 0
     score_to_print = ''
     score_to_print = ''
     game_mode_choice = 'classic'
+    clock_additional_time = 0
+    potion_effect = 0
 
 
 class Game:
@@ -148,6 +175,7 @@ class Game:
         self.show_score_screen = False
         self.show_about_screen = False
         self.show_dodge_game_screen = False
+        self.show_modern_game_screen = False
         self.screen = pygame.display.set_mode((1080, 720))
         pygame.display.set_caption("MINIONS GAME")
         self.keys = pygame.key.get_pressed()
@@ -164,6 +192,14 @@ class Game:
         self.current_settings = Settings()
         self.current_coordinates = ObjectsCoordinates()
         self.sound_of_game_on = True
+        self.on_2x = False
+        self.counter_2x = 0
+        self.print_2x_on_screen = False
+        self.appear_2x_on_game = True
+        self.set_clock = True
+        self.spawn_clock = False
+        self.appear_potion = False
+        self.set_potion = False
 
 
 class ObjectsCoordinates:
@@ -184,70 +220,12 @@ class ObjectsCoordinates:
         cord_y_yellow_minion, cord_y_purple_minion, cord_y_green_minion, cord_y_red_minion, cord_y_unicorn, \
         cord_y_banana = generate_list_of_coordinates()
     cord_out_screen = (-300, -300)
-
-
-def is_hovering_play_first_screen(mouse):
-    return (384 + 312 > mouse[0] > 383) and (170 + 92 > mouse[1] > 170)
-
-
-def is_hovering_quit_first_screen(mouse):
-    return (386 + 312 > mouse[0] > 386) and (618 + 92 > mouse[1] > 618)
-
-
-def is_hovering_score_first_screen(mouse):
-    return (384 + 312 > mouse[0] > 383) and (394 + 92 > mouse[1] > 394)
-
-
-def is_hovering_about_first_screen(mouse):
-    return (386 + 312 > mouse[0] > 386) and (506 + 92 > mouse[1] > 506)
-
-
-def is_hovering_play_in_game_mode(mouse):
-    return (735 + 312 > mouse[0] > 735) and (619 + 92 > mouse[1] > 619)
-
-
-def is_hovering_menu_in_game_mode(mouse):
-    return (74 + 312 > mouse[0] > 74) and (619 + 92 > mouse[1] > 619)
-
-
-def is_hovering_menu_in_score(mouse):
-    return (383 + 312 > mouse[0] > 383) and (614 + 92 > mouse[1] > 614)
-
-
-def is_hovering_menu_in_about(mouse):
-    return (383 + 312 > mouse[0] > 383) and (614 + 92 > mouse[1] > 614)
-
-
-def is_hovering_reset_in_score(mouse):
-    return (383 + 312 > mouse[0] > 383) and (421 + 92 > mouse[1] > 421)
-
-
-def is_hovering_play_in_settings_screen(mouse):
-    return (735 + 312 > mouse[0] > 735) and (619 + 92 > mouse[1] > 619)
-
-
-def is_hovering_menu_in_settings_screen(mouse):
-    return (74 + 312 > mouse[0] > 74) and (619 + 92 > mouse[1] > 619)
-
-
-def is_hovering_classic(mouse):
-    return (131 + 312 > mouse[0] > 131) and (290 + 92 > mouse[1] > 290)
-
-
-def is_hovering_dodge(mouse):
-    return (131 + 312 > mouse[0] > 131) and (390 + 92 > mouse[1] > 390)
-
-
-def is_hovering_modern(mouse):
-    return (131 + 312 > mouse[0] > 131) and (490 + 92 > mouse[1] > 490)
-
-
-def is_hovering_up_quit_in_game(mouse):
-    return (911 + 145 > mouse[0] > 911) and (30 + 36 > mouse[1] > 30)
-
-
-def is_hovering_menu_after_game(mouse):
-    return (380 + 300 > mouse[0] > 380) and (553 + 75 > mouse[1] > 553)
+    cord_x_2x = generate_just_coordinate_x()
+    cord_y_2x = generate_just_coordinate_y()
+    cord_x_potion = generate_just_coordinate_x()
+    cord_y_potion = generate_just_coordinate_y()
+    cord_x_clock = generate_just_coordinate_x()
+    cord_y_clock = generate_just_coordinate_y()
 
 
 def set_character(mouse, info_game):
@@ -315,15 +293,64 @@ def set_time(mouse, info_game):
 
 def spawn_obj_character(info_game):
     if info_game.current_settings.character_choice == 'agnes':
-        obj_character = info_game.screen.blit(image_agnes_obj, (
-            info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
+        if info_game.current_settings.potion_effect == 1:
+            obj_character = info_game.screen.blit(image_small_agnes_obj, ( info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
+        else:
+            obj_character = info_game.screen.blit(image_agnes_obj, (info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
     elif info_game.current_settings.character_choice == 'margo':
-        obj_character = info_game.screen.blit(image_margo_obj, (
-            info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
+        if info_game.current_settings.potion_effect == 1:
+            obj_character = info_game.screen.blit(image_small_margo_obj, (info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
+        else:
+            obj_character = info_game.screen.blit(image_margo_obj, (info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
     elif info_game.current_settings.character_choice == 'judith':
-        obj_character = info_game.screen.blit(image_judith_obj, (
-            info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
+        if info_game.current_settings.potion_effect == 1:
+            obj_character = info_game.screen.blit(image_small_judith_obj, (info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
+        else:
+            obj_character = info_game.screen.blit(image_judith_obj, (info_game.current_coordinates.cord_x_symbol, info_game.current_coordinates.cord_y_symbol))
     return obj_character
+
+
+def spawn_2x(info_game):
+    obj_2x = info_game.screen.blit(image_2x, info_game.current_coordinates.cord_out_screen)
+    if info_game.current_settings.level_choice == 'easy' and info_game.appear_2x_on_game:
+        if info_game.score_counter % 50 == 0 and info_game.score_counter > 0:
+            obj_2x = info_game.screen.blit(image_2x, (info_game.current_coordinates.cord_x_2x, info_game.current_coordinates.cord_y_2x))
+    elif info_game.current_settings.level_choice == 'normal' and info_game.appear_2x_on_game:
+        if info_game.score_counter % 100 == 0 and info_game.score_counter > 0:
+            obj_2x = info_game.screen.blit(image_2x, (info_game.current_coordinates.cord_x_2x, info_game.current_coordinates.cord_y_2x))
+    elif info_game.current_settings.level_choice == 'hard' and info_game.appear_2x_on_game:
+        if info_game.score_counter % 150 == 0 and info_game.score_counter > 0:
+            obj_2x = info_game.screen.blit(image_2x, (info_game.current_coordinates.cord_x_2x, info_game.current_coordinates.cord_y_2x))
+    else:
+        obj_2x = info_game.screen.blit(image_2x, info_game.current_coordinates.cord_out_screen)
+    return obj_2x
+
+
+def setting_clock(info_game):
+    if 50 < info_game.score_counter < 100:
+        x = random.randrange(30)
+        if x % 2:
+            info_game.set_clock = False
+            info_game.spawn_clock = True
+            if info_game.current_settings.level_choice == 'easy':
+                info_game.current_settings.clock_additional_time = 10
+            elif info_game.current_settings.level_choice == 'normal':
+                info_game.current_settings.clock_additional_time = 10
+            elif info_game.current_settings.level_choice == 'hard':
+                info_game.current_settings.clock_additional_time = 5
+
+
+def setting_potion(info_game):
+    '''1 = character, 2 = yellow_minion, 3 = bad_minions, 4 = speed character'''
+    if info_game.set_potion:
+        x = [1, 2, 3, 4]
+        info_game.current_settings.potion_effect = random.choice(x)
+        info_game.set_potion = False
+
+    obj_potion = info_game.screen.blit(image_potion, info_game.current_coordinates.cord_out_screen)
+    if info_game.appear_potion:
+        obj_potion = info_game.screen.blit(image_potion, (info_game.current_coordinates.cord_x_potion, info_game.current_coordinates.cord_y_potion))
+    return obj_potion
 
 
 def print_things_after_game_screen(info_game):
@@ -417,3 +444,65 @@ def checking_highest_score(info_game):
         the_highest_score = 0
     return the_highest_score
 
+def is_hovering_play_first_screen(mouse):
+    return (384 + 312 > mouse[0] > 383) and (170 + 92 > mouse[1] > 170)
+
+
+def is_hovering_quit_first_screen(mouse):
+    return (386 + 312 > mouse[0] > 386) and (618 + 92 > mouse[1] > 618)
+
+
+def is_hovering_score_first_screen(mouse):
+    return (384 + 312 > mouse[0] > 383) and (394 + 92 > mouse[1] > 394)
+
+
+def is_hovering_about_first_screen(mouse):
+    return (386 + 312 > mouse[0] > 386) and (506 + 92 > mouse[1] > 506)
+
+
+def is_hovering_play_in_game_mode(mouse):
+    return (735 + 312 > mouse[0] > 735) and (619 + 92 > mouse[1] > 619)
+
+
+def is_hovering_menu_in_game_mode(mouse):
+    return (74 + 312 > mouse[0] > 74) and (619 + 92 > mouse[1] > 619)
+
+
+def is_hovering_menu_in_score(mouse):
+    return (383 + 312 > mouse[0] > 383) and (614 + 92 > mouse[1] > 614)
+
+
+def is_hovering_menu_in_about(mouse):
+    return (383 + 312 > mouse[0] > 383) and (614 + 92 > mouse[1] > 614)
+
+
+def is_hovering_reset_in_score(mouse):
+    return (383 + 312 > mouse[0] > 383) and (421 + 92 > mouse[1] > 421)
+
+
+def is_hovering_play_in_settings_screen(mouse):
+    return (735 + 312 > mouse[0] > 735) and (619 + 92 > mouse[1] > 619)
+
+
+def is_hovering_menu_in_settings_screen(mouse):
+    return (74 + 312 > mouse[0] > 74) and (619 + 92 > mouse[1] > 619)
+
+
+def is_hovering_classic(mouse):
+    return (131 + 312 > mouse[0] > 131) and (290 + 92 > mouse[1] > 290)
+
+
+def is_hovering_dodge(mouse):
+    return (131 + 312 > mouse[0] > 131) and (390 + 92 > mouse[1] > 390)
+
+
+def is_hovering_modern(mouse):
+    return (131 + 312 > mouse[0] > 131) and (490 + 92 > mouse[1] > 490)
+
+
+def is_hovering_up_quit_in_game(mouse):
+    return (911 + 145 > mouse[0] > 911) and (30 + 36 > mouse[1] > 30)
+
+
+def is_hovering_menu_after_game(mouse):
+    return (380 + 300 > mouse[0] > 380) and (553 + 75 > mouse[1] > 553)

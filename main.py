@@ -136,6 +136,9 @@ def process_settings_screen(info_game):
                 elif info_game.current_settings.game_mode_choice == 'dodge':
                     info_game.show_dodge_game_screen = True
                     set_to_zero_counters(info_game)
+                elif info_game.current_settings.game_mode_choice == 'modern':
+                    info_game.show_modern_game_screen = True
+                    set_to_zero_counters(info_game)
 
         if is_hovering_menu_in_settings_screen(mouse):
             info_game.screen.blit(image_button_new_menu_white, (74, 619))
@@ -154,7 +157,6 @@ def process_classic_game_screen(info_game):
     info_game.show_classic_game_screen = True
     info_game.current_settings.start_timer_classic = time.time()
     while info_game.show_classic_game_screen:
-        print(info_game.the_highest_score)
         info_game.screen.blit(image_game_screen, (0, 0))
         mouse = pygame.mouse.get_pos()
         print(mouse)
@@ -169,7 +171,6 @@ def process_classic_game_screen(info_game):
                 info_game.sound_of_clicking.play()
                 info_game.show_classic_game_screen = False
                 info_game.show_after_game_screen = True
-                process_screen_after_game(info_game)
 
         if info_game.keys[pygame.K_w] and info_game.current_coordinates.cord_y_symbol >= 120:
             info_game.current_coordinates.cord_y_symbol -= info_game.current_coordinates.displacement
@@ -268,7 +269,7 @@ def process_classic_game_screen(info_game):
 
         info_game.current_settings.end_timer_classic = time.time()
         info_game.current_settings.timer = (
-                    info_game.current_settings.end_timer_classic - info_game.current_settings.start_timer_classic)
+                info_game.current_settings.end_timer_classic - info_game.current_settings.start_timer_classic)
         timer_to_print = f'{(info_game.current_settings.time_choice - info_game.current_settings.timer):.0f}s'
         info_game.current_settings.score_to_print = f'{info_game.score_counter}'
         timer_format = info_game.font_3.render(timer_to_print, True, (0, 0, 0))
@@ -279,7 +280,6 @@ def process_classic_game_screen(info_game):
         if info_game.current_settings.timer > info_game.current_settings.time_choice - 1:
             info_game.show_classic_game_screen = False
             info_game.show_after_game_screen = True
-            process_screen_after_game(info_game)
 
 
 def process_dodge_game_screen(info_game):
@@ -302,7 +302,6 @@ def process_dodge_game_screen(info_game):
                 info_game.sound_of_clicking.play()
                 info_game.show_dodge_game_screen = False
                 info_game.show_after_game_screen = True
-                process_screen_after_game(info_game)
 
         if info_game.keys[pygame.K_w] and info_game.current_coordinates.cord_y_symbol >= 120:
             info_game.current_coordinates.cord_y_symbol -= info_game.current_coordinates.displacement
@@ -313,7 +312,8 @@ def process_dodge_game_screen(info_game):
         if info_game.keys[pygame.K_a] and info_game.current_coordinates.cord_x_symbol >= 30:
             info_game.current_coordinates.cord_x_symbol -= info_game.current_coordinates.displacement
         '''SPAWN OBJECTS'''
-        obj_yellow_minion = info_game.screen.blit(image_yellow_minion, (info_game.current_coordinates.cord_x_yellow_minion, info_game.current_coordinates.cord_y_yellow_minion))
+        obj_yellow_minion = info_game.screen.blit(image_yellow_minion, (
+            info_game.current_coordinates.cord_x_yellow_minion, info_game.current_coordinates.cord_y_yellow_minion))
         obj_character = spawn_obj_character(info_game)
 
         if info_game.current_settings.level_choice == 'easy':
@@ -418,9 +418,222 @@ def process_dodge_game_screen(info_game):
         info_game.screen.blit(score_format, (260, 10))
         pygame.display.flip()
         if info_game.current_settings.timer > info_game.current_settings.time_choice - 1:
-            info_game.show_classic_game_screen = False
+            info_game.show_modern_game_screen = False
             info_game.show_after_game_screen = True
-            process_screen_after_game(info_game)
+
+
+def process_modern_game_screen(info_game):
+    info_game.show_modern_game_screen = True
+    info_game.current_settings.start_timer_classic = time.time()
+    info_game.current_settings.potion_effect = 0
+    collisions_before_potion = 0
+    while info_game.show_modern_game_screen:
+        info_game.screen.blit(image_game_screen, (0, 0))
+        mouse = pygame.mouse.get_pos()
+        info_game.keys = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                info_game.show_modern_game_screen = False
+        if is_hovering_up_quit_in_game(mouse):
+            info_game.screen.blit(image_button_quit_2_white, (911, 30))
+            if pygame.mouse.get_pressed() == (1, 0, 0):
+                info_game.sound_of_clicking.play()
+                info_game.show_modern_game_screen = False
+                info_game.show_after_game_screen = True
+
+        if info_game.current_settings.potion_effect == 4:
+            info_game.current_coordinates.displacement = 10
+        if info_game.keys[pygame.K_w] and info_game.current_coordinates.cord_y_symbol >= 120:
+            info_game.current_coordinates.cord_y_symbol -= info_game.current_coordinates.displacement
+        if info_game.keys[pygame.K_s] and info_game.current_coordinates.cord_y_symbol <= 625:
+            info_game.current_coordinates.cord_y_symbol += info_game.current_coordinates.displacement
+        if info_game.keys[pygame.K_d] and info_game.current_coordinates.cord_x_symbol <= 980:
+            info_game.current_coordinates.cord_x_symbol += info_game.current_coordinates.displacement
+        if info_game.keys[pygame.K_a] and info_game.current_coordinates.cord_x_symbol >= 30:
+            info_game.current_coordinates.cord_x_symbol -= info_game.current_coordinates.displacement
+
+        '''SPAWN OBJECTS'''
+        if info_game.current_settings.potion_effect == 2:
+            obj_yellow_minion = info_game.screen.blit(image_big_yellow_minion, (
+            info_game.current_coordinates.cord_x_yellow_minion, info_game.current_coordinates.cord_y_yellow_minion))
+        else:
+            obj_yellow_minion = info_game.screen.blit(image_yellow_minion, (
+            info_game.current_coordinates.cord_x_yellow_minion, info_game.current_coordinates.cord_y_yellow_minion))
+        obj_character = spawn_obj_character(info_game)
+        obj_2x = spawn_2x(info_game)
+        obj_clock = info_game.screen.blit(image_clock, info_game.current_coordinates.cord_out_screen)
+        obj_potion = setting_potion(info_game)
+
+        if info_game.current_settings.level_choice == 'easy':
+            if info_game.current_settings.potion_effect == 3:
+                set_bad_minions_on_corners(info_game)
+            obj_unicorn = info_game.screen.blit(image_unicorn, (
+            info_game.current_coordinates.cord_x_unicorn, info_game.current_coordinates.cord_y_unicorn))
+            obj_banana = info_game.screen.blit(image_banana, (
+            info_game.current_coordinates.cord_x_banana, info_game.current_coordinates.cord_y_banana))
+            obj_purple_minion = info_game.screen.blit(image_purple_minion, (
+            info_game.current_coordinates.cord_x_purple_minion, info_game.current_coordinates.cord_y_purple_minion))
+            obj_green_minion = info_game.screen.blit(image_green_minion, info_game.current_coordinates.cord_out_screen)
+            obj_red_minion = info_game.screen.blit(image_red_minion, info_game.current_coordinates.cord_out_screen)
+
+        elif info_game.current_settings.level_choice == 'normal':
+            if info_game.current_settings.potion_effect == 3:
+                set_bad_minions_on_corners(info_game)
+            obj_purple_minion = info_game.screen.blit(image_purple_minion, (
+                info_game.current_coordinates.cord_x_purple_minion, info_game.current_coordinates.cord_y_purple_minion))
+            obj_green_minion = info_game.screen.blit(image_green_minion, info_game.current_coordinates.cord_out_screen)
+            obj_red_minion = info_game.screen.blit(image_red_minion, info_game.current_coordinates.cord_out_screen)
+
+            if info_game.collision_counter != 0 and (info_game.collision_counter % 3 == 0):
+                obj_unicorn = info_game.screen.blit(image_unicorn, (
+                    info_game.current_coordinates.cord_x_unicorn, info_game.current_coordinates.cord_y_unicorn))
+            else:
+                obj_unicorn = info_game.screen.blit(image_unicorn, info_game.current_coordinates.cord_out_screen)
+            if info_game.collision_counter != 0 and (info_game.collision_counter % 6 == 0):
+                obj_banana = info_game.screen.blit(image_banana, (
+                    info_game.current_coordinates.cord_x_banana, info_game.current_coordinates.cord_y_banana))
+            else:
+                obj_banana = info_game.screen.blit(image_banana, info_game.current_coordinates.cord_out_screen)
+
+        elif info_game.current_settings.level_choice == 'hard':
+            if info_game.current_settings.potion_effect == 3:
+                set_bad_minions_on_corners(info_game)
+            obj_green_minion = info_game.screen.blit(image_green_minion, (
+                info_game.current_coordinates.cord_x_green_minion, info_game.current_coordinates.cord_y_green_minion))
+            obj_red_minion = info_game.screen.blit(image_red_minion, (
+                info_game.current_coordinates.cord_x_red_minion, info_game.current_coordinates.cord_y_red_minion))
+            obj_purple_minion = info_game.screen.blit(image_purple_minion, (
+                info_game.current_coordinates.cord_x_purple_minion, info_game.current_coordinates.cord_y_purple_minion))
+
+            if info_game.collision_counter != 0 and (info_game.collision_counter % 5 == 0):
+                obj_unicorn = info_game.screen.blit(image_unicorn, (
+                    info_game.current_coordinates.cord_x_unicorn, info_game.current_coordinates.cord_y_unicorn))
+            else:
+                obj_unicorn = info_game.screen.blit(image_unicorn, info_game.current_coordinates.cord_out_screen)
+            if info_game.collision_counter != 0 and (info_game.collision_counter % 10 == 0):
+                obj_banana = info_game.screen.blit(image_banana, (
+                    info_game.current_coordinates.cord_x_banana, info_game.current_coordinates.cord_y_banana))
+            else:
+                obj_banana = info_game.screen.blit(image_banana, info_game.current_coordinates.cord_out_screen)
+
+        '''CLOCK'''
+        if info_game.set_clock:
+            setting_clock(info_game)
+        if info_game.spawn_clock:
+            collision_counter_before_clock = info_game.collision_counter
+            obj_clock = info_game.screen.blit(image_clock, (
+            info_game.current_coordinates.cord_x_clock, info_game.current_coordinates.cord_y_clock))
+            if info_game.collision_counter > collision_counter_before_clock:
+                obj_clock = info_game.screen.blit(image_clock, info_game.current_coordinates.cord_out_screen)
+        '''2x'''
+        if info_game.print_2x_on_screen:
+            counter_2x = info_game.screen.blit(image_2x, (400, 10))
+            if info_game.counter_2x >= 3:
+                counter_2x = info_game.screen.blit(image_2x, (-200, -200))
+                info_game.counter_2x = 0
+                info_game.on_2x = False
+                info_game.print_2x_on_screen = False
+                info_game.appear_2x_on_game = True
+        '''POTION'''
+        if info_game.collision_counter > 0:
+            if info_game.collision_counter == 5 or info_game.collision_counter == 15 or info_game.collision_counter == 25:
+                info_game.appear_potion = True
+            else:
+                info_game.appear_potion = False
+        if collisions_before_potion > 0:
+            if info_game.collision_counter - collisions_before_potion >= 5:
+                info_game.current_settings.potion_effect = 0
+
+        check_collision = True
+        if check_collision:
+            if obj_character.colliderect(obj_potion):
+                collisions_before_potion = info_game.collision_counter
+                info_game.set_potion = True
+                info_game.appear_potion = False
+                info_game.sound_of_collision.play()
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.collision_counter += 1
+                pygame.time.delay(50)
+
+            if obj_character.colliderect(obj_2x):
+                info_game.on_2x = True
+                info_game.appear_2x_on_game = False
+                info_game.print_2x_on_screen = True
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.current_coordinates.cord_x_2x, info_game.current_coordinates.cord_y_2x = info_game.current_coordinates.cord_out_screen
+                info_game.sound_of_collision.play()
+                info_game.collision_counter += 1
+                pygame.time.delay(50)
+
+            if obj_character.colliderect(obj_clock):
+                info_game.spawn_clock = False
+                info_game.collision_counter += 1
+                info_game.current_settings.start_timer_classic += info_game.current_settings.clock_additional_time
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.sound_of_collision.play()
+                pygame.time.delay(50)
+
+            if obj_character.colliderect(obj_yellow_minion):
+                if info_game.on_2x:
+                    info_game.score_counter += 10
+                    info_game.counter_2x += 1
+                else:
+                    info_game.score_counter += 5
+
+                info_game.collision_counter += 1
+                info_game.good_minion_counter += 1
+
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.sound_of_collision.play()
+                pygame.time.delay(50)
+
+            if obj_character.colliderect(obj_unicorn):
+                if info_game.on_2x:
+                    info_game.score_counter += 20
+                    info_game.counter_2x += 1
+                else:
+                    info_game.score_counter += 10
+                info_game.collision_counter += 1
+                info_game.unicorn_counter += 1
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.sound_of_collision.play()
+                pygame.time.delay(50)
+            if obj_character.colliderect(obj_banana):
+                if info_game.on_2x:
+                    info_game.score_counter += 40
+                    info_game.counter_2x += 1
+                else:
+                    info_game.score_counter += 20
+                info_game.collision_counter += 1
+                info_game.banana_counter += 1
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.sound_of_clicking.play()
+                info_game.sound_of_collision.play()
+                pygame.time.delay(50)
+            if obj_character.colliderect(obj_purple_minion) or obj_character.colliderect(obj_green_minion) or \
+                    obj_character.colliderect(obj_red_minion):
+                info_game.collision_counter += 1
+                info_game.score_counter -= 10
+                info_game.bad_minions_counter += 1
+                if info_game.score_counter < 0:
+                    info_game.score_counter = 0
+                change_all_objects_coordinates(info_game.current_coordinates)
+                info_game.sound_of_collision.play()
+                pygame.time.delay(50)
+
+        info_game.current_settings.end_timer_classic = time.time()
+        info_game.current_settings.timer = (
+                    info_game.current_settings.end_timer_classic - info_game.current_settings.start_timer_classic)
+        timer_to_print = f'{(info_game.current_settings.time_choice - info_game.current_settings.timer):.0f}s'
+        info_game.current_settings.score_to_print = f'{info_game.score_counter}'
+        timer_format = info_game.font_3.render(timer_to_print, True, (0, 0, 0))
+        score_format = info_game.font_3.render(info_game.current_settings.score_to_print, True, (0, 0, 0))
+        info_game.screen.blit(timer_format, (680, 10))
+        info_game.screen.blit(score_format, (260, 10))
+        pygame.display.flip()
+        if info_game.current_settings.timer > info_game.current_settings.time_choice - 1:
+            info_game.show_modern_game_screen = False
+            info_game.show_after_game_screen = True
 
 
 def process_screen_after_game(info_game):
@@ -518,6 +731,10 @@ def main():
             process_classic_game_screen(info_game)
         elif info_game.show_dodge_game_screen:
             process_dodge_game_screen(info_game)
+        elif info_game.show_modern_game_screen:
+            process_modern_game_screen(info_game)
+        elif info_game.show_after_game_screen:
+            process_screen_after_game(info_game)
         elif info_game.show_score_screen:
             process_score_screen(info_game)
         elif info_game.show_about_screen:
